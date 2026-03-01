@@ -825,7 +825,7 @@ export class x402HTTPResourceServer {
     const regex = new RegExp(
       `^${
         path
-          .replace(/[$()+.?^{|}]/g, "\\$&") // Escape regex special chars
+          .replace(/[\\$()+.?^{|}]/g, "\\$&") // Escape regex special chars, including backslash
           .replace(/\*/g, ".*?") // Wildcards
           .replace(/\[([^\]]+)\]/g, "[^/]+") // Parameters
           .replace(/\//g, "\\/") // Escape slashes
