@@ -217,7 +217,9 @@ func main() {
 			fmt.Printf("   Path: %s\n", c.Request.URL.Path)
 			fmt.Printf("   Method: %s\n", c.Request.Method)
 			fmt.Printf("   Error: %v\n", err)
-			fmt.Printf("   Headers: %v\n", c.Request.Header)
+			// Avoid logging all request headers to prevent leaking sensitive data such as
+			// Authorization tokens or cookies. Log only non-sensitive metadata if needed.
+			fmt.Printf("   User-Agent: %s\n", c.Request.UserAgent())
 
 			// Default error response
 			c.JSON(http.StatusPaymentRequired, ginfw.H{
