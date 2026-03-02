@@ -7,6 +7,29 @@ import { getUserNotificationDetails } from "@/lib/notification";
 
 const appUrl = process.env.NEXT_PUBLIC_URL || "";
 
+// Allow-list of permitted notification service hostnames.
+// Adjust this list as needed for your deployment.
+const ALLOWED_NOTIFICATION_HOSTS = [
+  "api.farcaster.xyz",
+];
+
+function isAllowedNotificationUrl(rawUrl: string): boolean {
+  try {
+    const url = new URL(rawUrl);
+
+    // Only allow HTTPS URLs to external services.
+    if (url.protocol !== "https:") {
+      return false;
+    }
+
+    // Enforce that the hostname is one of the known notification providers.
+    return ALLOWED_NOTIFICATION_HOSTS.includes(url.hostname);
+  } catch {
+    // Reject malformed URLs.
+    return false;
+  }
+}
+
 type SendFrameNotificationResult =
   | {
       state: "error";
@@ -32,6 +55,13 @@ export async function sendFrameNotification({
   }
   if (!notificationDetails) {
     return { state: "no_token" };
+  }
+
+  if (!isAllowedNotificationUrl(notificationDetails.url)) {
+    return {
+      state: "error",
+      error: "Invalid notification URL",
+    };
   }
 
   const response = await fetch(notificationDetails.url, {
