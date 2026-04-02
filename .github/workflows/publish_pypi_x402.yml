@@ -3,6 +3,9 @@ name: Publish x402 to PyPI
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   publish-pypi-x402:
     runs-on: ubuntu-latest
@@ -16,18 +19,23 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Set up Python 3.10
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4.9.1
         with:
           python-version: "3.10"
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: step-security/setup-uv@ccf0a26ce9117d9e99292b0ce953ea5d9ffe778e # v7.3.0
         with:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
