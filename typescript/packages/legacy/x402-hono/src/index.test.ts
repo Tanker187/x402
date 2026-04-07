@@ -50,6 +50,7 @@ vi.mock("x402/shared", async importOriginal => {
           verb: verb.toUpperCase(),
           pattern: new RegExp(
             `^${path
+              .replace(/\\/g, "\\\\")
               .replace(/\*/g, ".*?")
               .replace(/\[([^\]]+)\]/g, "[^/]+")
               .replace(/\//g, "\\/")}$`,
