@@ -16,7 +16,7 @@
     "@x402/extensions": "workspace:*",
     "@x402/svm": "workspace:*",
     "dotenv": "^16.4.7",
-    "fastify": "^5.0.0"
+    "fastify": "^5.8.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.24.0",
